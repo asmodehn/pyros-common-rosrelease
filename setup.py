@@ -196,6 +196,7 @@ setuptools.setup(name='pyros-common',
     author_email='asmodehn@gmail.com',
     license='BSD',
     packages=[
+        'pyros_common',
         'pyros_interfaces_common',
         # mock always goes along with common (unless we find a bug with it and then we'll extract into his own package...)
         'pyros_interfaces_mock',
