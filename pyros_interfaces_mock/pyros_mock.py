@@ -139,4 +139,3 @@ class PyrosMock(PyrosBase):
         super(PyrosMock, self).setup(publishers=publishers, subscribers=subscribers, services=services, topics=topics, params=params)
 
 
-PyrosBase.register(PyrosMock)
