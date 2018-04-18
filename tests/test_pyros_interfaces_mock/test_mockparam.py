@@ -4,14 +4,10 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
-import nose
-from nose.tools import assert_true
-import unittest
-
 from pyros_interfaces_mock import MockSystem
 
 
-class TestMockService(unittest.TestCase):
+class TestMockService(object):
     """
     Main test fixture holding all tests
     Subclasses can override setup / teardown to test different environments
@@ -28,10 +24,10 @@ class TestMockService(unittest.TestCase):
 
     def test_echo_fortytwo(self):
         param = self.system.create_parameter('random_param', int)
-        assert_true(param.setval(42))
+        assert param.setval(42)
         recv = param.getval()
         print(recv)
-        assert_true(recv == 42)
+        assert recv == 42
 
 
 # Just in case we run this directly

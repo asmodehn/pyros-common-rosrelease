@@ -1,25 +1,50 @@
-import __builtin__
-import cPickle
+from __future__ import absolute_import, print_function
+
+import sys
+
+if sys.version_info < (3, 0):
+    import __builtin__ as builtins
+else:
+    import builtins
+
 from collections import namedtuple
 
 # TODO : use basemsg and develop a generic way of converting python type to custom type
 
-# type map specifying conversion
-# basic types should be python builtin types
-# if not in there : assumed to be a custom type, convertible to a dict.
-type_map = {
-   "bool":    ["bool"],
-   "int":     ["int", "float"],  # can convert int to float
-   "float":   ["float"],
-   "str":     ["str", "unicode"],  # convert str to unicode to follow python 3 default behavior
-   "unicode": ["unicode"],
-   "list":    ["list"],
-   "tuple":   ["tuple", "list"],  # can convert tuple to list
-}
 
-# Starting with whatever ROS needs, but we could extend this
-primitive_types = [bool, int, long, float, str, unicode]
-composed_types = [list, tuple]
+if sys.version_info < (3, 0):
+    # type map specifying conversion
+    # basic types should be python builtin types
+    # if not in there : assumed to be a custom type, convertible to a dict.
+    type_map = {
+       "bool":    ["bool"],
+       "int":     ["int", "float"],  # can convert int to float
+       "float":   ["float"],
+       "str":     ["str", "unicode"],  # convert str to unicode to follow python 3 default behavior
+       "unicode": ["unicode"],
+       "list":    ["list"],
+       "tuple":   ["tuple", "list"],  # can convert tuple to list
+    }
+
+    # Starting with whatever ROS needs, but we could extend this
+    primitive_types = [bool, int, long, float, str, unicode]
+    composed_types = [list, tuple]
+else:  # python3
+    # type map specifying conversion
+    # basic types should be python builtin types
+    # if not in there : assumed to be a custom type, convertible to a dict.
+    type_map = {
+        "bool": ["bool"],
+        "int": ["int", "float"],  # can convert int to float
+        "float": ["float"],
+        "bytes": ["bytes", "str"],  # bytes can be converted to str
+        "str": ["str"],
+        "list": ["list"],
+        "tuple": ["tuple", "list"],  # can convert tuple to list
+    }
+
+    primitive_types = [bool, int, float, bytes, str]
+    composed_types = [list, tuple]
 
 # defining Mock message types using namedtuple to keep things small
 StatusMsg = namedtuple("StatusMsg", "error code message")
@@ -61,22 +86,22 @@ def _to_inst(msg, ptype, roottype, inst=None, stack=None):
     # Check to see whether this is a primitive type
     if stack is None:
         stack = []
-    if ptype in __builtin__.__dict__ and (
-        __builtin__.__dict__[ptype] in primitive_types or
-        __builtin__.__dict__[ptype] in composed_types
+    if ptype in builtins.__dict__ and (
+        builtins.__dict__[ptype] in primitive_types or
+        builtins.__dict__[ptype] in composed_types
     ):
         # Typecheck the msg
         msgtype = type(msg)
 
         if msgtype in primitive_types and ptype in type_map[msgtype.__name__]:
-            return __builtin__.__dict__[ptype](msg)
+            return builtins.__dict__[ptype](msg)
         elif msgtype in composed_types and ptype in type_map[msgtype.__name__]:
             # Call to _to_inst for every element of the list/tuple
             def recurse_iter(msg):
                 for e in msg:  # we do this with yield to get an iteratable and build the tuple/list at once
                     yield _to_inst(e, type(e).__name__, roottype, None, stack)
 
-            return __builtin__.__dict__[ptype](recurse_iter(msg))
+            return builtins.__dict__[ptype](recurse_iter(msg))
 
         raise FieldTypeMismatchException(roottype, stack, ptype, msgtype)
 
@@ -92,6 +117,6 @@ def _to_inst(msg, ptype, roottype, inst=None, stack=None):
     # using ** to get dict content as named args for the namedtuple
     try:
         inst = globals()[ptype](**instmsg)
-    except TypeError, e:
-        raise NonexistentFieldException(msg, ptype, e.message)
+    except TypeError as e:
+        raise NonexistentFieldException(msg, ptype, e)
     return inst
