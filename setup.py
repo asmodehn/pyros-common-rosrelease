@@ -200,7 +200,7 @@ setuptools.setup(name='pyros-common',
         'pyros_interfaces_common',
         # mock always goes along with common (unless we find a bug with it and then we'll extract into his own package...)
         'pyros_interfaces_mock',
-        'pyros_interfaces_mock.tests',
+        #'pyros_interfaces_mock.tests', extracting tests from package to remove dependency on test tools
     ],
     # this is better than using package data ( since behavior is a bit different from distutils... )
     include_package_data=True,  # use MANIFEST.in during install.
@@ -208,14 +208,10 @@ setuptools.setup(name='pyros-common',
         'tblib',  # this might not always install six (latest version does not)
         'six',
         'pyzmq',
-        'pyzmp>=0.0.14',  # lets match the requirement in package.xml (greater than)
-        'pyros_setup>=0.1.5',  # Careful : pyros-setup < 0.0.8 might already be installed as a deb in /opt/ros/indigo/lib/python2.7/dist-packages/ => we still need to force hte install in the venv to have permissions to create hte configuration file...
+        'pyzmp>=0.0.17',  # lets match the requirement in package.xml (greater than)
+        # 'pyros_setup>=0.1.5',  # Careful : pyros-setup < 0.0.8 might already be installed as a deb in /opt/ros/indigo/lib/python2.7/dist-packages/ => we still need to force hte install in the venv to have permissions to create hte configuration file...
         'pyros_config>=0.1.4',
-        'nose>=1.3.7',
         'mock==1.0.1',  # old mock to be compatible with trusty versions
-    ],
-    test_requires=[
-        'pyros',  # we need pyros for testing...
     ],
     # Reference for optional dependencies : http://stackoverflow.com/questions/4796936/does-pip-handle-extras-requires-from-setuptools-distribute-based-sources
     cmdclass={

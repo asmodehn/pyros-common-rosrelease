@@ -40,5 +40,4 @@ class MockServicePool(TransientIfPool):
 
         return dt
 
-TransientIfPool.register(MockServicePool)
 
