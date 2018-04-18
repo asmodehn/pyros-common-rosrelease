@@ -355,10 +355,12 @@ def test_mockinterface_expose_services_regex_diff():
 
 # TODO : Same for topics and params
 
+# Just in case we run this directly
 if __name__ == '__main__':
-
-    import nose
-    nose.runmodule()
+    import pytest
+    pytest.main([
+        '-s', __file__,
+])
 
 
 

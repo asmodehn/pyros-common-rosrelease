@@ -1,12 +1,13 @@
 from __future__ import absolute_import
 
 import abc
+import contextlib
 import importlib
 
 import pyzmp
 from pyros_config import ConfigHandler
 
-from .exceptions import PyrosException
+from pyros_common.exceptions import PyrosException
 
 
 # TODO : cleaner design by using pyzmp.Node as delegate to make all interface explicit here...
@@ -86,6 +87,7 @@ class PyrosBase(pyzmp.Node):
             self.interface_class = interface_class
         self.interface = None  # delayed interface creation
         # interface should be created in child process only to maintain isolation.
+        # BUT in a context to have everything setup after returning from start() call.
 
     #
     # Delegating configuration management
@@ -111,6 +113,7 @@ class PyrosBase(pyzmp.Node):
     def root_path(self):
         return self.config_handler.root_path
 
+    # TODO : review API : configure and setup are similar, but on different processes, at different times...
     def configure(self, config=None):
         # We default to using a config file named after the import_name:
         config = config or self.name + '.cfg'
@@ -170,12 +173,12 @@ class PyrosBase(pyzmp.Node):
 
     def start(self, timeout=None):
         """
-        Clean shutdown of the node.
+        Startup of the node.
         :param join: optionally wait for the process to end (default : True)
         :return: None
         """
 
-        super(PyrosBase, self).start(timeout=timeout)
+        assert super(PyrosBase, self).start(timeout=timeout)
         # Because we currently use this to setup connection
         return self.name
 
@@ -218,7 +221,6 @@ class PyrosBase(pyzmp.Node):
             # get the class, will raise AttributeError if class cannot be found
             self.interface_class = getattr(m, class_name)
 
-
         if not (
                 # TODO : we should pre check all the used members are present...
                 hasattr(self.interface_class, 'services')
@@ -227,6 +229,43 @@ class PyrosBase(pyzmp.Node):
             raise PyrosException("The interface class is missing some members to be used as an interface. Aborting Setup. {interface_class}".format(**locals()))
 
         self.interface = self.interface_class(*args, **kwargs)
+        return self.interface
+
+    @contextlib.contextmanager
+    def child_context(self, *args, **kwargs):
+        """
+        Context setup first in child process, before returning from start() call in parent.
+        Result is passed in as argument of update
+        :return:
+        """
+
+        # Now we can extract config values
+        expected_args = {
+            'services': [],
+            'topics': [],  # bwcompat
+            'subscribers': [],
+            'publishers': [],
+            'params': [],
+            # TODO : all of them !
+        }
+
+        ifargs = {
+            arg: self.config_handler.config.get(arg.upper(), default) for arg, default in expected_args.items()
+        }
+
+        # overriding with kwargs
+        ifargs.update(kwargs)
+
+        # storing passed args in config in case of reset
+
+        # calling setup on child context enter call
+        if self.interface is None:
+            #for BW compat
+            # TODO : change API to use the child_context from pyzmp coprocess
+            self.setup(*args, **ifargs)
+
+        with super(PyrosBase, self).child_context(*args, **kwargs) as cctxt:
+            yield cctxt
 
     def shutdown(self, join=True, timeout=None):
         """
@@ -245,8 +284,6 @@ class PyrosBase(pyzmp.Node):
         Note : the interface is lazily constructed here
         :param timedelta: the time past since the last update call
         """
-        if self.interface is None:
-            self.setup(*args, **kwargs)
 
         # TODO move time management somewhere else...
         self.last_update += timedelta
