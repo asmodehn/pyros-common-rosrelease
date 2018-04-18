@@ -3,7 +3,7 @@
   <name>pyros_common</name>
   <!-- new name, from kinetic distro
   <name>pyros_interfaces_common</name> -->
-  <version>0.5.1</version>
+  <version>0.5.2</version>
   <description>
     Common interfaces packages for Pyros framework
   </description>
@@ -19,8 +19,8 @@
   <buildtool_depend version_gte="0.6.18">catkin</buildtool_depend>
   <build_depend version_gte="0.2.0">catkin_pip</build_depend>
 
-  <depend version_gte="0.0.14">pyzmp</depend>
-  <depend version_gte="0.1.5">pyros_config</depend>
+  <depend version_gte="0.0.17">pyzmp</depend>
+  <depend version_gte="0.2.0">pyros_config</depend>
 
 
 </package>
