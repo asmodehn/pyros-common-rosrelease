@@ -20,7 +20,7 @@ if (CATKIN_ENABLE_TESTING)
     ##############################################################################
 
     # Careful this will not support parallel testing, due to multiprocess environment used in tests
-    catkin_add_nosetests(pyros_interfaces_mock/tests)
+    catkin_add_pytests(tests/test_pyros_interfaces_mock)
 
     # TODO : run ROS tests with --no-skip to force them...
 
