@@ -34,6 +34,9 @@ class TestMockService(unittest.TestCase):
         assert_true(recv == 42)
 
 
+# Just in case we run this directly
 if __name__ == '__main__':
-
-    nose.runmodule()
+    import pytest
+    pytest.main([
+        '-s', __file__,
+])

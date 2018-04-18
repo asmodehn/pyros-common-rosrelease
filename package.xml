@@ -3,7 +3,7 @@
   <name>pyros_common</name>
   <!-- new name, from kinetic distro
   <name>pyros_interfaces_common</name> -->
-  <version>0.4.2</version>
+  <version>0.5.1</version>
   <description>
     Common interfaces packages for Pyros framework
   </description>

@@ -44,6 +44,9 @@ class TestMockTopic(unittest.TestCase):
         assert_true(recv.message == 'A bad Error happened')
 
 
+# Just in case we run this directly
 if __name__ == '__main__':
-
-    nose.runmodule()
+    import pytest
+    pytest.main([
+        '-s', __file__,
+])
