@@ -66,8 +66,8 @@ tracks:
     patches: kinetic
     release_inc: '1'
     release_repo_url: null
-    release_tag: ros-:{version}
+    release_tag: :{version}
     ros_distro: kinetic
     vcs_type: git
-    vcs_uri: https://github.com/asmodehn/pyros-common.git
+    vcs_uri: https://github.com/pyros-dev/pyros-common.git
     version: :{ask}
