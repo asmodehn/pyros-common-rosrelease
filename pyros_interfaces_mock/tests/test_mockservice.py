@@ -43,7 +43,10 @@ class TestMockService(unittest.TestCase):
 
 # TODO : make sure we handle errors when the service is exposed, but not existing any longer
 
+# Just in case we run this directly
 if __name__ == '__main__':
-
-    nose.runmodule()
+    import pytest
+    pytest.main([
+        '-s', __file__,
+])
 
