@@ -95,7 +95,8 @@ def test_mocknode_provide_services():  # Here we check that this node actually p
         mockn.shutdown()
         assert not mockn.is_alive()
 
-
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_publishers_detect():  # Here we check that this node actually detects a topic
     mockn = PyrosMock(kwargs={
         'services': [],
@@ -130,7 +131,7 @@ def test_mocknode_publishers_detect():  # Here we check that this node actually 
             assert len(topics.providers) == 1
 
             time.sleep(mockn.update_interval + 1)  # make sure we let update time to kick in
-
+            # TODO : change timeout
             res = topics.call(recv_timeout=6000000)
             # the mock system should have done its job from the other process perspective too
             # via multiprocess manager list
@@ -141,6 +142,8 @@ def test_mocknode_publishers_detect():  # Here we check that this node actually 
         assert not mockn.is_alive()
 
 
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_publishers_configure_detect():  # Here we check that this node actually detects a topic
     mockn = PyrosMock()
 
@@ -178,7 +181,7 @@ def test_mocknode_publishers_configure_detect():  # Here we check that this node
             assert len(topics.providers) == 1
 
             time.sleep(mockn.update_interval + 1)  # make sure we let update time to kick in
-
+            # TODO : change timeout
             res = topics.call(recv_timeout=6000000)
             # the mock system should have done its job from the other process perspective too
             # via multiprocess manager list
@@ -189,6 +192,8 @@ def test_mocknode_publishers_configure_detect():  # Here we check that this node
         assert not mockn.is_alive()
 
 
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_publishers_detect_setup():  # Here we check that this node actually detects a topic upon setup
     mockn = PyrosMock()
     assert not mockn.is_alive()
@@ -225,6 +230,8 @@ def test_mocknode_publishers_detect_setup():  # Here we check that this node act
         assert not mockn.is_alive()
 
 
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_publishers_detect_throttled():
     """
     Testing that the mocknode detection of topics is throttled properly
@@ -269,6 +276,8 @@ def test_mocknode_publishers_detect_throttled():
         assert not mockn.is_alive()
 
 
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_subscribers_detect():  # Here we check that this node actually detects a topic
     mockn = PyrosMock(kwargs={
         'services': [],
@@ -315,6 +324,8 @@ def test_mocknode_subscribers_detect():  # Here we check that this node actually
 
 
 
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_subscribers_configure_detect():  # Here we check that this node actually detects a topic
     mockn = PyrosMock()
 
@@ -363,6 +374,8 @@ def test_mocknode_subscribers_configure_detect():  # Here we check that this nod
         assert not mockn.is_alive()
 
 
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_subscribers_detect_setup():  # Here we check that this node actually detects a topic upon setup
     mockn = PyrosMock()
     assert not mockn.is_alive()
@@ -399,6 +412,8 @@ def test_mocknode_subscribers_detect_setup():  # Here we check that this node ac
         assert not mockn.is_alive()
 
 
+#TODO change it
+@pytest.mark.timeout(6000000)
 def test_mocknode_subscribers_detect_throttled():
     """
     Testing that the mocknode detection of topics is throttled properly

@@ -41,4 +41,3 @@ class MockPublisherPool(TransientIfPool):
 
         return dt
 
-TransientIfPool.register(MockPublisherPool)

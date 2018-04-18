@@ -2,8 +2,19 @@ Changelog
 =========
 
 
+%%version%% (unreleased)
+------------------------
+- Fixing tox config. [AlexV]
+- Adding rosdistros to travis build. [AlexV]
+- Dropping py3 travis checks. still hanging... [AlexV]
+- Extracted tests from package. now testing py3 environments added
+  requirements matching ROS distros for testing. reviewing ABC usage.
+  [AlexV]
+
+
 0.5.1 (2018-04-16)
 ------------------
+- V0.5.1. [AlexV]
 - Adding common package to hold crossprocess exceptions. [AlexV]
 
 
