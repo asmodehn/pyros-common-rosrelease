@@ -41,4 +41,3 @@ class MockSubscriberPool(TransientIfPool):
 
         return dt
 
-TransientIfPool.register(MockSubscriberPool)

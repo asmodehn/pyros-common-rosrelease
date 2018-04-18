@@ -5,100 +5,112 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
 from pyros_interfaces_mock import extract_values, populate_instance, FieldTypeMismatchException, NonexistentFieldException, StatusMsg
-import nose
-from nose.tools import assert_true, assert_false, assert_raises
 
+import pytest
 
 def test_populate_msg_bool_true():
     msg = populate_instance(True, bool())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, bool))
-    assert_true(msg)
+    assert isinstance(msg, bool)
+    assert msg
 
 
 def test_populate_msg_bool_false():
     msg = populate_instance(False, bool())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, bool))
-    assert_false(msg)
+    assert isinstance(msg, bool)
+    assert not msg
 
 
 def test_populate_msg_int_to_int():
     msg = populate_instance(42, int())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, int))
-    assert_true(msg == 42)
+    assert isinstance(msg, int)
+    assert msg == 42
 
 
 def test_populate_msg_int_to_float():
     msg = populate_instance(42, float())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, float))
-    assert_true(msg == 42.0)
+    assert isinstance(msg, float)
+    assert msg == 42.0
 
 
 def test_populate_msg_float():
     msg = populate_instance(3.1415, float())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, float))
-    assert_true(msg == 3.1415)
+    assert isinstance(msg, float)
+    assert msg == 3.1415
 
 
 def test_populate_msg_float_to_int_error():
-    with assert_raises(FieldTypeMismatchException):
+    with pytest.raises(FieldTypeMismatchException):
         populate_instance(3.1415, int())
+
+
+if sys.version_info >= (3, 0):
+    def test_populate_msg_bytes_to_bytes():
+        msg = populate_instance(b'forty two', bytes())
+        print("msg is of type {0}".format(type(msg)))
+        assert isinstance(msg, bytes)
+        assert msg == b'forty two'
 
 
 def test_populate_msg_str_to_str():
     msg = populate_instance(r'forty two', str())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, str))
-    assert_true(msg == r'forty two')
+    assert isinstance(msg, str)
+    assert msg == r'forty two'
 
 
-def test_populate_msg_str_to_unicode():
-    msg = populate_instance(r'forty two', unicode())
-    print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, unicode))
-    assert_true(msg == u'forty two')
+if sys.version_info < (3, 0):
+    def test_populate_msg_str_to_unicode():
+        msg = populate_instance(r'forty two', unicode())
+        print("msg is of type {0}".format(type(msg)))
+        assert isinstance(msg, unicode)
+        assert msg == u'forty two'
 
 
-def test_populate_msg_unicode_to_unicode():
-    msg = populate_instance(u'forty two', unicode())
-    print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, unicode))
-    assert_true(msg == u'forty two')
+    def test_populate_msg_unicode_to_unicode():
+        msg = populate_instance(u'forty two', unicode())
+        print("msg is of type {0}".format(type(msg)))
+        assert isinstance(msg, unicode)
+        assert msg == u'forty two'
 
-
-def test_populate_msg_unicode_to_str_error():
-    with assert_raises(FieldTypeMismatchException):
-        populate_instance(u'forty two', str())
+if sys.version_info < (3,0):
+    def test_populate_msg_unicode_to_str_error():
+        with pytest.raises(FieldTypeMismatchException):
+            populate_instance(u'forty two', str())
+else:  # python3
+    def test_populate_msg_str_to_bytes_error():
+        with pytest.raises(FieldTypeMismatchException):
+            populate_instance(u'forty two', bytes())
 
 
 def test_populate_msg_list():
     msg = populate_instance([False, 42, 3.1415, r'fortytwo', u'forty two'], list())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, list))
-    assert_true(msg == [False, 42, 3.1415, r'fortytwo', u'forty two'])
+    assert isinstance(msg, list)
+    assert msg == [False, 42, 3.1415, r'fortytwo', u'forty two']
 
 
 def test_populate_msg_list_to_tuple_error():
-    with assert_raises(FieldTypeMismatchException):
+    with pytest.raises(FieldTypeMismatchException):
         populate_instance([False, 42, 3.1415, r'fortytwo', u'forty two'], tuple())
 
 
 def test_populate_msg_tuple_to_tuple():
     msg = populate_instance((False, 42, 3.1415, r'fortytwo', u'forty two'), tuple())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, tuple))
-    assert_true(msg == (False, 42, 3.1415, r'fortytwo', u'forty two'))
+    assert isinstance(msg, tuple)
+    assert msg == (False, 42, 3.1415, r'fortytwo', u'forty two')
 
 
 def test_populate_msg_tuple_to_list():
     msg = populate_instance((False, 42, 3.1415, r'fortytwo', u'forty two'), list())
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, list))
-    assert_true(msg == [False, 42, 3.1415, r'fortytwo', u'forty two'])
+    assert isinstance(msg, list)
+    assert msg == [False, 42, 3.1415, r'fortytwo', u'forty two']
 
 
 def test_populate_msg_dict_to_status():
@@ -107,15 +119,15 @@ def test_populate_msg_dict_to_status():
         StatusMsg(error=False, code=42, message="Not an error")
     )
     print("msg is of type {0}".format(type(msg)))
-    assert_true(isinstance(msg, StatusMsg))
-    assert_true(msg.error)
-    assert_true(msg.code == 7)
-    assert_true(msg.message == "Actual Error")
+    assert isinstance(msg, StatusMsg)
+    assert msg.error
+    assert msg.code == 7
+    assert msg.message == "Actual Error"
 
 
 def test_populate_msg_dict_to_status_error():
 
-    with assert_raises(NonexistentFieldException):
+    with pytest.raises(NonexistentFieldException):
         msg = populate_instance(
             {"error": True, "code": 7, "message": "Actual Error", "non-existent": "field"},
             StatusMsg(error=False, code=42, message="Not an error")
@@ -127,78 +139,87 @@ def test_populate_msg_dict_to_status_error():
 def test_extract_msg_bool_true():
     msg = populate_instance(True, bool())
     data = extract_values(msg)
-    assert_true(isinstance(data, bool))
-    assert_true(data)
+    assert isinstance(data, bool)
+    assert data
 
 
 def test_extract_msg_bool_false():
     msg = populate_instance(False, bool())
     data = extract_values(msg)
-    assert_true(isinstance(data, bool))
-    assert_false(data)
+    assert isinstance(data, bool)
+    assert not data
 
 
 def test_extract_msg_int_to_int():
     msg = populate_instance(42, int())
     data = extract_values(msg)
-    assert_true(isinstance(data, int))
-    assert_true(data == 42)
+    assert isinstance(data, int)
+    assert data == 42
 
 
 def test_extract_msg_int_to_float():
     msg = populate_instance(42, float())
     data = extract_values(msg)
-    assert_true(isinstance(data, float))
-    assert_true(data == 42.0)
+    assert isinstance(data, float)
+    assert data == 42.0
 
 
 def test_extract_msg_float():
     msg = populate_instance(3.1415, float())
     data = extract_values(msg)
-    assert_true(isinstance(data, float))
-    assert_true(data == 3.1415)
+    assert isinstance(data, float)
+    assert data == 3.1415
+
+
+if sys.version_info >= (3, 0):
+    def test_extract_msg_bytes_to_bytes():
+        msg = populate_instance(b'forty two', bytes())
+        data = extract_values(msg)
+        assert isinstance(data, bytes)
+        assert data == b'forty two'
 
 
 def test_extract_msg_str_to_str():
     msg = populate_instance(r'forty two', str())
     data = extract_values(msg)
-    assert_true(isinstance(data, str))
-    assert_true(data == r'forty two')
+    assert isinstance(data, str)
+    assert data == r'forty two'
 
 
-def test_extract_msg_str_to_unicode():
-    msg = populate_instance(r'forty two', unicode())
-    data = extract_values(msg)
-    assert_true(isinstance(data, unicode))
-    assert_true(data == u'forty two')
+if sys.version_info < (3, 0):
+    def test_extract_msg_str_to_unicode():
+        msg = populate_instance(r'forty two', unicode())
+        data = extract_values(msg)
+        assert isinstance(data, unicode)
+        assert data == u'forty two'
 
 
-def test_extract_msg_unicode_to_unicode():
-    msg = populate_instance(u'forty two', unicode())
-    data = extract_values(msg)
-    assert_true(isinstance(data, unicode))
-    assert_true(data == u'forty two')
+    def test_extract_msg_unicode_to_unicode():
+        msg = populate_instance(u'forty two', unicode())
+        data = extract_values(msg)
+        assert isinstance(data, unicode)
+        assert data == u'forty two'
 
 
 def test_extract_msg_list():
     msg = populate_instance([False, 42, 3.1415, r'fortytwo', u'forty two'], list())
     data = extract_values(msg)
-    assert_true(isinstance(data, list))
-    assert_true(data == [False, 42, 3.1415, r'fortytwo', u'forty two'])
+    assert isinstance(data, list)
+    assert data == [False, 42, 3.1415, r'fortytwo', u'forty two']
 
 
 def test_extract_msg_tuple_to_tuple():
     msg = populate_instance((False, 42, 3.1415, r'fortytwo', u'forty two'), tuple())
     data = extract_values(msg)
-    assert_true(isinstance(data, tuple))
-    assert_true(data == (False, 42, 3.1415, r'fortytwo', u'forty two'))
+    assert isinstance(data, tuple)
+    assert data == (False, 42, 3.1415, r'fortytwo', u'forty two')
 
 
 def test_extract_msg_tuple_to_list():
     msg = populate_instance((False, 42, 3.1415, r'fortytwo', u'forty two'), list())
     data = extract_values(msg)
-    assert_true(isinstance(msg, list))
-    assert_true(msg == [False, 42, 3.1415, r'fortytwo', u'forty two'])
+    assert isinstance(msg, list)
+    assert msg == [False, 42, 3.1415, r'fortytwo', u'forty two']
 
 
 def test_extract_msg_dict_to_status():
@@ -207,10 +228,10 @@ def test_extract_msg_dict_to_status():
         StatusMsg(error=False, code=42, message="Not an error")
     )
     data = extract_values(msg)
-    assert_true(isinstance(data, StatusMsg))
-    assert_true(data.error)
-    assert_true(data.code == 7)
-    assert_true(data.message == "Actual Error")
+    assert isinstance(data, StatusMsg)
+    assert data.error
+    assert data.code == 7
+    assert data.message == "Actual Error"
 
 # Just in case we run this directly
 if __name__ == '__main__':
