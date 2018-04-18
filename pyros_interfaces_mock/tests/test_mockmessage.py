@@ -212,6 +212,9 @@ def test_extract_msg_dict_to_status():
     assert_true(data.code == 7)
     assert_true(data.message == "Actual Error")
 
+# Just in case we run this directly
 if __name__ == '__main__':
-
-    nose.runmodule()
+    import pytest
+    pytest.main([
+        '-s', __file__,
+])
