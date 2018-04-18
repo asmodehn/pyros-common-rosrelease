@@ -40,4 +40,3 @@ class MockParamPool(TransientIfPool):
 
         return dt
 
-TransientIfPool.register(MockParamPool)
