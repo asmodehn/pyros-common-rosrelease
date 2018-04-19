@@ -2,8 +2,18 @@ Changelog
 =========
 
 
-%%version%% (unreleased)
-------------------------
+0.5.3 (2018-04-19)
+------------------
+- Expliciting constructor as it might be useful to manager different
+  version of Python Exceptions. [AlexV]
+- Fixing exceptions to get any number of args. adding test. [AlexV]
+- Fixing version in changelog. [AlexV]
+
+
+0.5.2 (2018-04-18)
+------------------
+- Adding pyup config. [AlexV]
+- V0.5.2. [AlexV]
 - Fixing tox config. [AlexV]
 - Adding rosdistros to travis build. [AlexV]
 - Dropping py3 travis checks. still hanging... [AlexV]
