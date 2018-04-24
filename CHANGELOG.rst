@@ -2,8 +2,15 @@ Changelog
 =========
 
 
+0.5.4 (2018-04-24)
+------------------
+- Relaxing dependencies version requirements to work cross distros.
+  [AlexV]
+
+
 0.5.3 (2018-04-19)
 ------------------
+- V0.5.3. [AlexV]
 - Expliciting constructor as it might be useful to manager different
   version of Python Exceptions. [AlexV]
 - Fixing exceptions to get any number of args. adding test. [AlexV]
